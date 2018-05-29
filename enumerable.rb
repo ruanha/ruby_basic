@@ -93,4 +93,68 @@ module Enumerable
   end
 
 
+  def my_count
+  	''' Returns the number of elements.
+  		If an argument is given, counts the number of elements which equal obj using ==.
+  		If a block is given, counts the number of elements for which the block returns a true value.
+  	'''
+  	count = 0
+
+    if block_given?
+      self.my_each do |elem|
+        count += (yield(elem)) ? 1 : 0
+      end
+    else
+      i = 0
+      self.my_each do |elem|
+        count += (elem != nil) ? 1 : 0
+      end
+    end
+    count
+  end
+
+
+  def my_map
+    '''Returns a new array with the results of running block once for every element in enum.
+    input: a block
+    output: Array, with elements that have been passed to the given block
+    '''
+    if block_given?
+      mapped_result = []
+      self.my_each do |elem|
+        mapped_result.push(yield(elem))
+      end
+      return mapped_result
+    else
+      return "Supply a block please."
+    end
+  end
+
+
+  def my_inject
+    '''If you specify a block, then for each element in enum
+    the block is passed an accumulator value (memo) and the element.
+    If you specify a symbol instead, then each element in the collection
+    will be passed to the named method of memo. 
+    In either case, the result becomes the new value for memo. 
+    At the end of the iteration, the final value of memo is the return value for the method.
+
+    This version supports elements of type Integer, String
+    It checks the first element in the Array for the type
+    '''
+    if block_given?
+      memo = self[0]
+      self[1..-1].my_each do |elem|
+        memo = yield(memo, elem)
+      end
+    else
+      return "pass a blok"
+    end
+    memo
+  end
+
+end
+
+def multiply_els array
+  array.my_inject { |m, n| m*n}
 end
